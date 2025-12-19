@@ -316,6 +316,11 @@ function Set-CCDCFirewallLockdown {
     # NTP (time sync to DC)
     New-NetFirewallRule -DisplayName "CCDC ALLOW OUT NTP UDP 123 to DC" `
         -Direction Outbound -Action Allow -Protocol UDP -RemoteAddress $DCIP -RemotePort 123 -Profile Any | Out-Null
+
+    #Allow Powershell to ping
+    New-NetFirewallRule -DisplayName "CCDC ALLOW OUT ICMPv4" `
+  	-Direction Outbound -Action Allow -Protocol ICMPv4 -Profile Any | Out-Null
+
 }
 
 function Disable-Services-And-Features {
