@@ -10,7 +10,6 @@ Write-Host "Done"
 Write-Host "Downloading configuration files..."
 Invoke-WebRequest -Uri $giturl -OutFile "C:\Program Files\ClamAV\clamd.conf"
 Invoke-WebRequest -Uri $giturl2 -OutFile "C:\Program Files\ClamAV\freshclam.conf"
-Sleep 5
 Write-Host "Done"
 
 Write-Host "Updating database..."
@@ -19,3 +18,4 @@ Write-Host "Done"
 
 
 Read-Host "Press Enter to finish...."
+
