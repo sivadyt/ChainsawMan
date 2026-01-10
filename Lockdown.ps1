@@ -23,7 +23,7 @@ What it does:
       Outbound AD/DC traffic to DC only (Kerberos/LDAP/SMB/RPC/NTP)
 - Disables: Print Spooler, RemoteRegistry, SMBv1, RDP
 - Enables Defender + real-time + cloud-delivered protection
-
+#>
 #Requires -RunAsAdministrator
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
