@@ -12,10 +12,7 @@ Invoke-WebRequest -Uri $giturl -OutFile "C:\Program Files\ClamAV\clamd.conf"
 Invoke-WebRequest -Uri $giturl2 -OutFile "C:\Program Files\ClamAV\freshclam.conf"
 Write-Host "Done"
 
-Write-Host "Updating database..."
-Start-Process -FilePath "C:\Program Files\ClamAV\freshclam.exe" -Wait
-Write-Host "Done"
-
-
+Write-Host "ClamAV installed..."
+Write-Host "Remember to update database with freshclam"
+Write-Host 'Scan with clamscan "\folderpath"'
 Read-Host "Press Enter to finish...."
-
