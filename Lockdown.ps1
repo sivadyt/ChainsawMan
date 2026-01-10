@@ -31,7 +31,7 @@ $ErrorActionPreference = "Stop"
 # -------------------------
 # CONFIG (edit if needed)
 # -------------------------
-$DomainControllerIP = "172.20.240.202"   # your DC/DNS from earlier
+$DomainControllerIP = "172.20.240.102"   # your DC/DNS from earlier
 $NewAdminUser       = "CCDCBlueTeam"
 $PlainPassword      = "M3tro-WEB"        # as requested (note: shorter than 14; created BEFORE policy is enforced)
 
