@@ -44,6 +44,7 @@ Disable-ServiceSafe "BluetoothSupportService"
 Disable-ServiceSafe "WSearch"           # Windows Search (optional, but common)
 Disable-ServiceSafe "CscService"        # Offline Files
 Disable-ServiceSafe "WerSvc"            # Windows Error Reporting (optional)
+([WmiClass]'Win32_OfflineFilesCache').Enable($false) # Disable Offline Files Caching
 
 if ($DisableWinRM) {
   Disable-ServiceSafe "WinRM"
