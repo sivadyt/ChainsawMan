@@ -9,15 +9,16 @@ if (-not ([Security.Principal.WindowsPrincipal] `
 }
 
 # --- Vars ---
-$MSI_URL  = "https://packages.wazuh.com/4.x/windows/wazuh-agent-4.13.1-1.msi"
+$WAZUH_VER = "4.14.2-1"
+$MSI_URL  = "https://packages.wazuh.com/4.x/windows/wazuh-agent-$WAZUH_VER.msi"
 $TMP      = $env:TEMP
-$MSI_PATH = Join-Path $TMP "wazuh-agent-4.13.1-1.msi"
+$MSI_PATH = Join-Path $TMP "wazuh-agent-$WAZUH_VER.msi"
 
 # --- Input ---
 $managerIp = Read-Host "Wazuh Manager IP"
 $agentName = Read-Host "Wazuh Agent Name"
 
-# --- TLS (common Windows fix) ---
+# --- TLS fix ---
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
 Write-Host "[*] Downloading MSI..."
