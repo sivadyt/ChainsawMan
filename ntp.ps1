@@ -19,7 +19,7 @@ if ($input -eq 'host') {
   Write-Host "Done"
 } else {
   Write-Host "Setting peerlist..."
-  w32tm /config /manualpeerlist:"0.pool.ntp.org 1.pool.ntp.org 2.pool.ntp.org" /update
+  w32tm /config /manualpeerlist:"172.20.242.104" /update
   Write-Host "Done"
 }
 
