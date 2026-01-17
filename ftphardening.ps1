@@ -126,6 +126,8 @@ New-NetFirewallRule -DisplayName "CCDC-NTP" -Direction Outbound -Action Allow -P
 
 New-NetFirewallRule -DisplayName "CCDC-ICMP" -Direction Outbound -Action Allow -Protocol ICMPv4 -Profile Any | Out-Null
 
+New-NetFirewallRule -DisplayName "CCDC-Splunk" -Direction Outbound -Action Allow -Protocol TCP -RemotePort 8089-9997 -Profile Any | Out-Null
+
 # --- Management: lock RDP to admin CIDRs (or disable) ---
 if ($AllowRdp) {
   # Remove broad RDP allows (best-effort)
