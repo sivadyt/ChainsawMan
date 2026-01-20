@@ -36,8 +36,8 @@ do {
     }
     # Host on this machine
     "3" {
-      Write-Host "Hosting NTP Server with w32tm..."
-      Write-Host "Setting registery values:`n"
+      Write-Host "Hosting NTP Server with w32tm...`n"
+      Write-Host "Setting registery values:"
       Write-Host "Enabling NTP Server hosting..."
       Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\W32Time\TimeProviders\NtpServer" -Name "Enabled" -Value 1
       Write-Host "Done`n"
@@ -50,7 +50,7 @@ do {
       # Defaulting to popular public pool
       Write-Host "Setting peerlist..."
       w32tm /config /manualpeerlist:"$publicPool" /syncfromflags:MANUAL /reliable:YES /update
-      Write-Host "Done`n"
+      Write-Host "Done"
     } 
   } 
 } until ($input -eq "0" -or $input -eq "1" -or $input -eq "2" -or $input -eq "3")
