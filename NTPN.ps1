@@ -17,7 +17,7 @@ function Menu {
 Write-Host "Configuring w32time...`n"
 do {
   Menu
-  $input = Read-Host -Prompt "Enter: "
+  $input = Read-Host -Prompt "Enter"
 
   switch ($input) {
     # Exit
