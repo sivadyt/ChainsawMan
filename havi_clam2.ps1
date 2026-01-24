@@ -12,6 +12,10 @@ $FRESHCLAM_CONF_URL = "https://raw.githubusercontent.com/sivadyt/ChainsawMan/ref
 $INSTALL_DIR = "C:\Program Files\ClamAV"
 $DB_DIR      = "$INSTALL_DIR\database"
 
+# --- Certs dirs (copy/sync) ---
+$CERTS_DIR_INSTALL = "$INSTALL_DIR\certs"
+$CERTS_DIR_LEGACY  = "C:\ClamAV\certs"
+
 function Is-Admin {
   $id = [Security.Principal.WindowsIdentity]::GetCurrent()
   $p  = New-Object Security.Principal.WindowsPrincipal($id)
@@ -69,10 +73,26 @@ $freshclam  = Find-Exe "freshclam.exe" @($installDir, "$installDir\bin", $INSTAL
 # --- Ensure DB dir ---
 New-Item -ItemType Directory -Force -Path $DB_DIR | Out-Null
 
+# --- Ensure certs dirs exist + copy/sync ---
+New-Item -ItemType Directory -Force -Path $CERTS_DIR_INSTALL | Out-Null
+New-Item -ItemType Directory -Force -Path $CERTS_DIR_LEGACY  | Out-Null
+
+$installHas = ((Get-ChildItem $CERTS_DIR_INSTALL -Force -ErrorAction SilentlyContinue | Measure-Object).Count -gt 0)
+$legacyHas  = ((Get-ChildItem $CERTS_DIR_LEGACY  -Force -ErrorAction SilentlyContinue | Measure-Object).Count -gt 0)
+
+if ($installHas -and -not $legacyHas) {
+  Copy-Item "$CERTS_DIR_INSTALL\*" $CERTS_DIR_LEGACY -Recurse -Force -ErrorAction SilentlyContinue
+} elseif ($legacyHas -and -not $installHas) {
+  Copy-Item "$CERTS_DIR_LEGACY\*" $CERTS_DIR_INSTALL -Recurse -Force -ErrorAction SilentlyContinue
+} elseif ($installHas -and $legacyHas) {
+  # keep them in sync (install -> legacy)
+  Copy-Item "$CERTS_DIR_INSTALL\*" $CERTS_DIR_LEGACY -Recurse -Force -ErrorAction SilentlyContinue
+}
+
 # --- Apply configs ---
 Write-Host "Applying configuration files..."
-Copy-Item (Join-Path $tmp "clamd.conf")     "$INSTALL_DIR\clamd.conf"     -Force
-Copy-Item (Join-Path $tmp "freshclam.conf") "$INSTALL_DIR\freshclam.conf" -Force
+Copy-Item (Join-Path $tmp "clamd.conf")      "$INSTALL_DIR\clamd.conf"      -Force
+Copy-Item (Join-Path $tmp "freshclam.conf")  "$INSTALL_DIR\freshclam.conf" -Force
 
 # --- Update DB ---
 Write-Host "Running freshclam..."
@@ -83,16 +103,12 @@ Write-Host ""
 & $clamscan --version
 Get-ChildItem $DB_DIR
 
-
-
-
 # --- Create Scheduled Task: Hourly ClamAV Scan ---
-
 $taskName = "ClamAV Hourly Scan"
 
 # Remove existing task if present
 if (Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue) {
-    Unregister-ScheduledTask -TaskName $taskName -Confirm:$false
+  Unregister-ScheduledTask -TaskName $taskName -Confirm:$false
 }
 
 $action = New-ScheduledTaskAction `
@@ -102,7 +118,8 @@ $action = New-ScheduledTaskAction `
 $trigger = New-ScheduledTaskTrigger `
   -Once `
   -At (Get-Date).AddHours(1) `
-  -RepetitionInterval (New-TimeSpan -Minutes 60)
+  -RepetitionInterval (New-TimeSpan -Minutes 60) `
+  -RepetitionDuration ([TimeSpan]::MaxValue)
 
 $principal = New-ScheduledTaskPrincipal `
   -UserId "SYSTEM" `
@@ -120,11 +137,3 @@ Register-ScheduledTask `
   -Description "Runs an hourly ClamAV scan of C: drive."
 
 Write-Host "Scheduled task '$taskName' created."
-
-# --- Paths ---
-$INSTALL_DIR = "C:\Program Files\ClamAV"
-$DB_DIR      = "$INSTALL_DIR\database"
-
-# --- Certs dirs (copy/sync) ---
-$CERTS_DIR_INSTALL = "$INSTALL_DIR\certs"
-$CERTS_DIR_LEGACY  = "C:\ClamAV\certs"
