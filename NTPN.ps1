@@ -74,10 +74,10 @@ if ($input -eq "0") {
   w32tm /resync /force
   Write-Host "Done`n"
 
-  Write-Host "w32tm setup completed."
+  Write-Host "w32tm setup completed.`n"
 }
 
-Write-Host "Printing NTP peers...`n"
+Write-Host "Printing NTP peers..."
 w32tm /query /peers
 
 Read-Host "`nPress enter to exit..."
