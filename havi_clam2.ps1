@@ -119,7 +119,6 @@ $trigger = New-ScheduledTaskTrigger `
   -Once `
   -At (Get-Date).AddHours(1) `
   -RepetitionInterval (New-TimeSpan -Minutes 60) `
-  -RepetitionDuration ([TimeSpan]::MaxValue)
 
 $principal = New-ScheduledTaskPrincipal `
   -UserId "SYSTEM" `
